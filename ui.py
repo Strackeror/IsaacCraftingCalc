@@ -234,6 +234,8 @@ def refreshItemList():
     -craftingcalc.quality[t[0]],
     itemNames[t[0]]
   ))
+  for id, recipes in foundCrafts:
+    recipes.sort(key=lambda recipe: sum([craftingcalc.craftingWeights[i] for i in recipe]))
 
   for item in foundCrafts:
     itemList.insert(END, (special_quality.get(item[0], (0, ''))[1], itemNames[item[0]], "(" + str(craftingcalc.quality[item[0]]) + ")"))

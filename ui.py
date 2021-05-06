@@ -72,6 +72,147 @@ labels = [
   ("Cracked Key", "Crk")
 ]
 
+
+special_items = [
+  ('BRK', [
+    # Drop on damage
+    "Fanny Pack",
+    "Piggy Bank",
+    "Old Bandage",
+    "Gimpy",
+
+    # Healing
+    "Maggy's Bow",
+    "Charm of the Vampire",
+    "Placenta",
+    "Yum Heart",
+
+    # More stuff
+    "Sack Head",
+    "Humbleing Bundle",
+    "BOGO Bombs",
+    "Options?",
+    "Mom's Key",
+    "D20",
+    "Lucky Foot",
+
+    # More rooms
+    "X-Ray Vision",
+    "Red Key",
+
+    # Money
+    "Restock",
+    "Steam Sale",
+    "A Dollar",
+    "IV Bag",
+
+    # Blood Donation Machine spam
+    "Virgo",
+    "Book of Shadows",
+
+    # Get more completion marks
+    "Clicker",
+    "R Key",
+    "Goat Head",
+    "Mama Mega!",
+  ]),
+
+  # Active item aids
+  ("ACT", [
+    "Car Battery",
+    "Habit",
+    "9 Volt",
+    "Jumper Cables",
+    "Schoolbag",
+    "Void",
+    "Sharp Plug",
+  ]),
+
+  # Trinkets
+  ("TRK", [
+    "Marbles",
+    "Smelter",
+    "Mom's Box",
+  ]),
+
+  # Generates drops on room clear
+  ("DRP", [
+    "Sack of Pennies",
+    "Sack of Sacks",
+    "Little C.H.A.D.",
+    "Lil Chest",
+    "Mystery Sack",
+    "Rune Bag",
+    "Bomb Bag",
+    "The Relic",
+    "Charged Baby",
+    "Acid Baby",
+  ]),
+
+  ("PCK", [
+    # One-time pickups
+    "Box",
+    "Pandora's Box",
+    "Mystery Gift",
+    "Marrow",
+    "Mom's Coin Purse",
+    "Battery Pack",
+    "Chaos",
+    "Dad's Lost Coin",
+
+    # Periodic pickups
+    "Crystal Ball",
+    "The Book of Sin"
+  ]),
+
+  # Good items with low quality
+  ("LOQ", [
+    "Dead Cat",
+    "The Halo",
+  ]),
+
+  # Defense items
+  ("DEF", [
+    "Gnawed Leaf",
+    "The Soul",
+    "Halo of Flies",
+    "Sacrificial Dagger",
+    "Cube of Meat",
+    "Ball of Bandages",
+    "Guardian Angel",
+    "Sworn Protector", # (actually on hit)
+    "Bot Fly",
+    "Psy Fly",
+    "Saturnus",
+    "The Swarm",
+  ]),
+
+  # Flight
+  ("FLY", [
+    "A Pony",
+    "White Pony",
+    "Dead Dove",
+    "Fate",
+    "Holy Grail",
+    "Lord of the Pit",
+    "Spirit of the Night",
+    "Transcendence",
+    "Dogma",
+    "Revelation",
+  ]),
+]
+
+itemsByName = {}
+for i, name in itemNames.items():
+  itemsByName[name] = i
+
+special_quality = {}
+for i, group in enumerate(special_items):
+  quality = len(special_items) - i
+  group_name = group[0]
+  for name in group[1]:
+    special_quality[itemsByName[name]] = (quality, group_name)
+
 def refreshItemList():
   itemList.delete(0, END)
   availablePickups = [0]
@@ -86,10 +227,14 @@ def refreshItemList():
   global foundCrafts
   calculatedCrafts = findItems(availablePickups, craftingPickups)
   foundCrafts = [(id, recipes) for id, recipes in calculatedCrafts.items()]
-  foundCrafts.sort(key=lambda t: (-craftingcalc.quality[t[0]], itemNames[t[0]]))
+  foundCrafts.sort(key=lambda t: (
+    -special_quality.get(t[0], (0, ''))[0],
+    -craftingcalc.quality[t[0]],
+    itemNames[t[0]]
+  ))
 
   for item in foundCrafts:
-    itemList.insert(END, (itemNames[item[0]], "(" + str(craftingcalc.quality[item[0]]) + ")"))
+    itemList.insert(END, (special_quality.get(item[0], (0, ''))[1], itemNames[item[0]], "(" + str(craftingcalc.quality[item[0]]) + ")"))
   refreshCrafts()
 
 def refreshCrafts(p = None):

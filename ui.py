@@ -287,7 +287,7 @@ for i in range(1, 25):
   crafting.grid(row=i, column=2, sticky="EW")
   craftings.append(crafting)
 
-  count = Spinbox(win, to=8, command=refreshItemList)
+  count = Spinbox(win, to=99, command=refreshItemList)
   count.set(0)
   count.grid(row=i, column=1, sticky="EW")
   counts.append(count)

@@ -239,9 +239,9 @@ def refreshItemList():
 
 def refreshCrafts(p = None):
   craftList.delete(0, END)
-  selection = itemList.curselection()
-  if selection:
-    for recipe in foundCrafts[selection[0]][1]:
+  selection = itemList.index(ANCHOR)
+  if selection < len(foundCrafts):
+    for recipe in foundCrafts[selection][1]:
       craftList.insert(END, [labels[i][0] for i in recipe])
 
 def reset():

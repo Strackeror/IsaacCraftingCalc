@@ -246,6 +246,18 @@ def refreshCrafts(p = None):
     for recipe in foundCrafts[selection][1]:
       craftList.insert(END, [labels[i][0] for i in recipe])
 
+def craftItem(p = None):
+  itemSelection = itemList.index(ANCHOR)
+  craftSelection = craftList.index(ANCHOR)
+  if itemSelection < len(foundCrafts) and craftSelection < len(foundCrafts[itemSelection][1]):
+    recipe = foundCrafts[itemSelection][1][craftSelection]
+    for pickup in recipe:
+      if int(craftings[pickup - 1].get()) > 0:
+        craftings[pickup - 1].set(int(craftings[pickup - 1].get()) - 1)
+      else:
+        counts[pickup - 1].set(int(counts[pickup - 1].get()) - 1)
+    refreshItemList()
+
 def reset():
   for count in counts:
     count.set(0)
@@ -286,6 +298,7 @@ itemList.bind("<<ListboxSelect>>", refreshCrafts)
 
 craftList = Listbox(win, selectmode=SINGLE, width=60)
 craftList.grid(column=4,row=2, rowspan=25, sticky="NSEW")
+craftList.bind('<Double-Button-1>', craftItem)
 
 win.columnconfigure(3, weight=1)
 win.columnconfigure(4, weight=2)

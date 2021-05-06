@@ -7,6 +7,8 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter.ttk import *
 
+import json
+
 xmlItems = ET.fromstring(open("items.xml").read())
 itemNames = {}
 for item in xmlItems:
@@ -289,4 +291,23 @@ win.columnconfigure(3, weight=1)
 win.columnconfigure(4, weight=2)
 for i in range(1, 25):
   win.rowconfigure(i, weight=1)
+
+try:
+  data = json.load(open("state.json"))
+  for i in range(1, 25):
+    counts   [i - 1].set(data[0][i - 1])
+    craftings[i - 1].set(data[1][i - 1])
+  refreshItemList()
+except FileNotFoundError:
+  pass
+
+def save():
+  data = [[], []]
+  for i in range(1, 25):
+    data[0].append(int(counts[i - 1].get()))
+    data[1].append(int(craftings[i - 1].get()))
+  json.dump(data, open("state.json", "w"))
+  win.destroy()
+
+win.protocol("WM_DELETE_WINDOW", save)
 win.mainloop()

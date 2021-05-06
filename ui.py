@@ -142,4 +142,6 @@ craftList.grid(column=4,row=2, rowspan=25, sticky="NSEW")
 
 win.columnconfigure(3, weight=1)
 win.columnconfigure(4, weight=2)
+for i in range(1, 25):
+  win.rowconfigure(i, weight=1)
 win.mainloop()

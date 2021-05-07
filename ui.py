@@ -284,15 +284,13 @@ for i in range(1, 25):
   label = Label(win, text=labels[i][0])
   label.grid(row=i, column=0, sticky="W")
 
-  count = Spinbox(win, to=99, command=refreshItemList)
-  count.set(0)
-  count.grid(row=i, column=1, sticky="EW")
-  counts.append(count)
-
-  crafting = Spinbox(win, to=8, command=refreshItemList)
-  crafting.set(0)
-  crafting.grid(row=i, column=2, sticky="EW")
-  craftings.append(crafting)
+  for which in range(2):
+    max_value = 99 if which == 0 else 8
+    var = StringVar(None, '0')
+    var.trace_add("write", lambda name, index, mode, var=var: refreshItemList())
+    spinbox = Spinbox(win, to=max_value, textvariable=var)
+    spinbox.grid(row=i, column=1 + which, sticky="EW")
+    (counts, craftings)[which].append(spinbox)
 
 itemList = Listbox(win, selectmode=SINGLE, width=30)
 itemList.grid(column=3,row=2, rowspan=25, sticky="NSEW")
